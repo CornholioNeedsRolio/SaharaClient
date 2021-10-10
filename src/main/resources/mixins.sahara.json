@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.7.10",
+  "package": "com.cornholio.sahara.mixin",
+  "refmap": "mixins.sahara.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinBlockLiquid",
+    "MixinEntityPlayer",
+    "MixinEntityPlayerSP",
+    "MixinEntityRenderer",
+    "MixinGuiDisconnect",
+    "MixinModelPlayer",
+    "MixinNetworkManager",
+    "MixinRenderFreeCam",
+    "MixinTurnOverride",
+    "MixinAbstractClientPlayer",
+    "MixinDebugRenderer"
+  ]
+}

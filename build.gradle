@@ -1,0 +1,136 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = 'ForgeMaven'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+
+        maven {
+            name = 'SpongePowered'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
+        classpath "com.google.code.gson:gson:2.8.6"
+    }
+
+}
+
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+
+//I have no idea how the fuck gradle works, I just typed random shit for 3 days straight until I've got it right
+
+version = '1.0'
+group = 'com.cornholio.sahara' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'sahara'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+    options.encoding = "UTF-8" // allow emoji in comments :^)
+}
+
+minecraft {
+    //mappings channel: 'snapshot', version: '20171003-1.12'
+    mappings channel: 'snapshot', version: '20171003-1.12'
+//    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    accessTransformer = file('src/main/resources/META-INF/sahara_at.cfg')
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            property 'fml.coreMods.load', 'com.cornholio.sahara.MixinLoader'
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = 'spongepowered'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+}
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+
+
+    embed('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'guava'
+        exclude module: 'commons-io'
+        exclude module: 'gson'
+    }
+
+    annotationProcessor "org.spongepowered:mixin:0.8:processor"
+
+}
+
+sourceSets {
+    main {
+        ext.refMap = "mixins.sahara.refmap.json"
+    }
+}
+
+mixin {
+    defaultObfuscationEnv 'searge'
+    add sourceSets.main, 'mixins.sahara.refmap.json'
+}
+
+// Example for how to get properties into the manifest for reading by the runtime..
+jar {
+    from {
+        configurations.embed.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes([
+                "MixinConfigs": "mixins.sahara.json",
+                "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+                "TweakOrder": 0,
+                "FMLCorePlugin": "com.cornholio.sahara.MixinLoader",
+                "ForceLoadAsMod": "true",
+                "FMLCorePluginContainsFMLMod": "true",
+                "FMLAT": "sahara_at.cfg"
+        ])
+    }
+}
+
+// Example configuration to allow publishing using the maven-publish task
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+//build.dependsOn(shadowJar)
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+//publish.dependsOn('reobfJar')
+
+/*publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+*/
