@@ -44,7 +44,7 @@ public class AutoMount extends Module
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
-        if(mc.player != null && mc.player.isRiding() || !timer.passed(delay.getFloat() * 1000)) return;
+        if(mc.player != null && mc.player.isRiding() || mc.world == null || !timer.passed(delay.getFloat() * 1000)) return;
 
         List<Entity> entities = mc.world.getLoadedEntityList();
         for(Entity entity : entities)

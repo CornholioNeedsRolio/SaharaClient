@@ -1,7 +1,9 @@
 package com.cornholio.sahara.mixin;
 
 import com.cornholio.sahara.SaharaClient;
+import com.cornholio.sahara.events.PlayerUpdateEvent;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,4 +19,15 @@ public class MixinEntityPlayer
             info.cancel();
     }
 
+    @Inject(method="onUpdate", at=@At("HEAD"))
+    public void onPreUpdate(CallbackInfo info)
+    {
+        MinecraftForge.EVENT_BUS.post(new PlayerUpdateEvent(true));
+    }
+
+    @Inject(method="onUpdate", at=@At("RETURN"))
+    public void onPostUpdate(CallbackInfo info)
+    {
+        MinecraftForge.EVENT_BUS.post(new PlayerUpdateEvent(false));
+    }
 }
