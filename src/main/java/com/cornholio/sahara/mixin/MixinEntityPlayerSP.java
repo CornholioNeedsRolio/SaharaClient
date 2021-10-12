@@ -29,6 +29,13 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer
         info.setReturnValue(info.getReturnValueZ() || SaharaClient.getSahara().getModuleManager().Freecam.isActive());
     }
 
+    @Inject(method = "dismountRidingEntity", at = @At("HEAD"), cancellable = true)
+    public void dismountRidingEntity(CallbackInfo info)
+    {
+        if(SaharaClient.getSahara().getModuleManager().boatFly.disableDismount())
+            info.cancel();
+    }
+
     @Inject(method = "startRiding", at = @At("HEAD"), cancellable = true)
     public void startRiding(Entity entityIn, boolean force, CallbackInfoReturnable<Boolean> info)
     {

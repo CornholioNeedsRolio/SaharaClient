@@ -28,17 +28,21 @@ public class BoatFly extends Module
     ModuleSetting downSpeed;
     ModuleSetting fixYaw;
     ModuleSetting PacketCanceler;
+    ModuleSetting GoNUTS;
 
     EntityBoat the_boat;
     public BoatFly()
     {
         super("BoatFly", "Fly with the boat",  ModuleCategory.Player);
+        registerSetting(PacketCanceler = new ModuleSetting("Packet Canceler", true));
+        registerSetting(GoNUTS = new ModuleSetting("Go NUTS", false));
+
+
         registerSetting(fixYaw = new ModuleSetting("Fixed Yaw", true));
         registerSetting(speed = new ModuleSetting("Speed", 0, 20, 1));
         registerSetting(upSpeed = new ModuleSetting("Up Speed", 0, 20, 1));
         registerSetting(downSpeed = new ModuleSetting("Down Speed", 0, 20, 1));
         registerSetting(glide = new ModuleSetting("Glide", 0, 20, 0.2f));
-        registerSetting(PacketCanceler = new ModuleSetting("Packet Canceler", true));
     }
 
     public boolean getFixYaw()
@@ -50,15 +54,14 @@ public class BoatFly extends Module
     public void onPacketEvent(PacketEvent event) {
         if(!PacketCanceler.getBoolean()) return;
         if(mc.player == null) return;
-
+        //mc.player.dismountRidingEntity();
         if ((event.getPacket() instanceof SPacketSetPassengers) ) {
             SPacketSetPassengers packet = (SPacketSetPassengers)event.getPacket();
-            boolean wtf = false;
-            if(mc.player.getRidingEntity() == null)
-                wtf = true;
-            else if(packet.getEntityId() == mc.player.getRidingEntity().getEntityId())
-                wtf = true;
-
+            //boolean wtf = true;
+            //if(mc.player.getRidingEntity() != null) {
+            //    if (packet.getEntityId() == mc.player.getRidingEntity().getEntityId())
+            //        wtf = true;
+            //}
             if(the_boat != null && packet.getPassengerIds().length == 0) {
                 mc.player.connection.sendPacket(new CPacketUseEntity(the_boat, EnumHand.MAIN_HAND));
                 event.setCanceled(true);
@@ -107,5 +110,16 @@ public class BoatFly extends Module
         int c0 = Keyboard.getEventKey();
         if(c0 == Keyboard.KEY_LCONTROL)
             boat.motionY = -downSpeed.getFloat();
+    }
+
+    public boolean disableDismount()
+    {
+        if(!GoNUTS.getBoolean()) return false;
+
+        if(the_boat != null && isActive()) {
+            mc.player.connection.sendPacket(new CPacketUseEntity(the_boat, EnumHand.MAIN_HAND));
+            return true;
+        }
+        return false;
     }
 }
