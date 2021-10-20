@@ -12,8 +12,8 @@ public class ClickGuiModule extends Module
 {
     public ClickGuiModule() {
         super("ClickGUI", "Manages the utility mod's menu", ModuleCategory.Player);
-        dontLoadOrSave = true;
-        this.setKey(Keyboard.KEY_B);
+        //dontLoadOrSave = true;
+        //this.setKey(Keyboard.KEY_B);
     }
 
     @Override

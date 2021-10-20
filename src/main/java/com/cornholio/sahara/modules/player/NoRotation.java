@@ -31,16 +31,16 @@ public class NoRotation extends Module
         registerSetting(classic = new ModuleSetting("Packet", false));
     }
 
-    @Override
-    public boolean onTurn(Entity entity, float yaw, float pitch, CallbackInfo ci)
-    {
-        if(isActive() && entity == mc.player && !classic.getBoolean())
-        {
-            doMagic();
-            return true;
-        }
-        return false;
-    }
+    //@Override
+    //public boolean onTurn(Entity entity, float yaw, float pitch, CallbackInfo ci)
+    //{
+    //    if(isActive() && entity == mc.player && !classic.getBoolean())
+    //    {
+    //        //doMagic();
+    //        return true;
+    //    }
+    //    return false;
+    //}
 
     @SubscribeEvent
     public void onPacketEvent(PacketEvent event)
@@ -57,10 +57,20 @@ public class NoRotation extends Module
     }
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event)
+    public void onClientTick(TickEvent.PlayerTickEvent event)
     {
         //if(!event.isPre()) return;
-        doMagic();
+        updatePlayer();
+    }
+
+    public void updatePlayer()
+    {
+        if(mc.player == null) return;
+        mc.player.rotationYaw = this.yaw;
+        mc.player.rotationPitch = this.pitch;
+        mc.player.prevRotationPitch = this.prevpitch;
+        mc.player.prevRotationYaw = this.prevyaw;
+
     }
 
     private void doMagic()

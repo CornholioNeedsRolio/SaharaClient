@@ -60,7 +60,9 @@ public class WallhackModule extends Module
         GlStateManager.glLineWidth(lineWidth.getFloat());
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
-        this.mc.entityRenderer.disableLightmap();
+
+        //boolean oldLightMapBool = this.mc.entityRenderer.light
+        //this.mc.entityRenderer.disableLightmap();
         glColor4f(255,255,255, 255);
         if(ignoreDepth.getBoolean()) GlStateManager.disableDepth();
 
@@ -97,7 +99,7 @@ public class WallhackModule extends Module
         buffer.pos(renderBox.minX, renderBox.minY, renderBox.maxZ).endVertex();
         buffer.pos(renderBox.minX, renderBox.minY, renderBox.minZ).endVertex();
         Tessellator.getInstance().draw();
-        this.mc.entityRenderer.enableLightmap();
+        //this.mc.entityRenderer.enableLightmap();
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();

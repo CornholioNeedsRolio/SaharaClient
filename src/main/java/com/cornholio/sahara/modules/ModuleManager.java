@@ -37,6 +37,8 @@ public class ModuleManager
     public JesusModule jesusModule;
     public StrangeModule strangeModule;
     public CornholioModule cornholioModule;
+    public BoatPlaceConst boatPlaceConst;
+    public MountBypassModule mountBypassModule;
 
     public ModuleManager()
     {
@@ -111,7 +113,9 @@ public class ModuleManager
                 wallhackModule = new WallhackModule(),
                 jesusModule = new JesusModule(),
                 strangeModule = new StrangeModule(),
-                cornholioModule = new CornholioModule()
+                cornholioModule = new CornholioModule(),
+                boatPlaceConst = new BoatPlaceConst(),
+                mountBypassModule = new MountBypassModule()
         ));
         return Collections.unmodifiableList(output);
     }
