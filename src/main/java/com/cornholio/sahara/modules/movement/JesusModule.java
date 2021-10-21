@@ -24,7 +24,7 @@ public class JesusModule extends Module
         super("Jesus", "Jesus used this hack a few years ago", ModuleCategory.Movement);
     }
     private float offset = 0;
-    private boolean increaseOffset = false;
+    private int ticks = 0;
     public AxisAlignedBB getCollisionBoundingBox(AxisAlignedBB defaultBB)
     {
         if(!isActive() || mc.player == null || mc.player.fallDistance >= 3 || mc.player.motionY > 0.09) return defaultBB;
@@ -56,12 +56,17 @@ public class JesusModule extends Module
     public void onPacketEvent(PacketEvent event)
     {
         if(mc.player == null || mc.world == null) return;
+        float values[] = new float[]
+                {
+                    0, 0.019f, 0.06f, 0.08f, 0.02f
+                };
 
-        if(event.getPacket() instanceof CPacketPlayer.Position && !isInWater() && isOnWater())
+        if(event.getPacket() instanceof CPacketPlayer && !isInWater() && isOnWater())
         {
-            System.out.println(offset);
-            CPacketPlayer.Position ev = (CPacketPlayer.Position) event.getPacket();
-            ev.y -= offset;
+            CPacketPlayer ev = (CPacketPlayer) event.getPacket();
+            ev.y = mc.player.posY - values[ticks++ % values.length];
+
+            //System.out.println(ev.y);
         }
         if(event.getPacket() instanceof SPacketPlayerPosLook && isOnWater() && !isInWater())
         {
