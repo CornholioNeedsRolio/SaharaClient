@@ -1,6 +1,7 @@
 package com.cornholio.sahara.modules.movement;
 
 import com.cornholio.sahara.modules.Module;
+import com.cornholio.sahara.modules.ModuleSetting;
 import com.cornholio.sahara.modules.packetevent.ModuleCategory;
 import com.cornholio.sahara.modules.packetevent.PacketEvent;
 import net.minecraft.block.Block;
@@ -19,17 +20,18 @@ import java.util.Random;
 
 public class JesusModule extends Module
 {
+    ModuleSetting bouncy;
     public JesusModule()
     {
         super("Jesus", "Jesus used this hack a few years ago", ModuleCategory.Movement);
+        registerSetting(bouncy = new ModuleSetting("Bouncy", false));
     }
     private float offset = 0;
     private int ticks = 0;
     public AxisAlignedBB getCollisionBoundingBox(AxisAlignedBB defaultBB)
     {
-        if(!isActive() || mc.player == null || mc.player.fallDistance >= 3 || mc.player.motionY > 0.09) return defaultBB;
-        AxisAlignedBB box = (new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D));
-        return box;
+        if(!isActive() || mc.player == null || mc.player.fallDistance >= 3 || mc.player.motionY > 0.09 /*|| mc.player.isBurning()*/) return defaultBB;
+        return (new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, bouncy.getBoolean() ? 0.9D : 1.0D, 1.0D));
     }
 
     public boolean canCollide(boolean defaultBool)
@@ -55,8 +57,9 @@ public class JesusModule extends Module
     @SubscribeEvent
     public void onPacketEvent(PacketEvent event)
     {
-        if(mc.player == null || mc.world == null) return;
-        float values[] = new float[]
+        if(mc.player == null || mc.world == null || bouncy.getBoolean()) return;
+
+        float[] values = new float[]
                 {
                     0, 0.019f, 0.06f, 0.08f, 0.02f
                 };
@@ -65,9 +68,8 @@ public class JesusModule extends Module
         {
             CPacketPlayer ev = (CPacketPlayer) event.getPacket();
             ev.y = mc.player.posY - values[ticks++ % values.length];
-
-            //System.out.println(ev.y);
         }
+
         if(event.getPacket() instanceof SPacketPlayerPosLook && isOnWater() && !isInWater())
         {
             SPacketPlayerPosLook packet = (SPacketPlayerPosLook)event.getPacket();

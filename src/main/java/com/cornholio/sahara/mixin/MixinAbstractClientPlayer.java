@@ -14,7 +14,7 @@ public class MixinAbstractClientPlayer
 {
     private ResourceLocation CornholioSkin = new ResourceLocation("minecraft","cornholio.png");
 
-    @Inject(method = "getLocationSkin", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getLocationSkin", at = @At("HEAD"), cancellable = true, remap = !SaharaClient.isDebug)
     public void getLocationSkin(CallbackInfoReturnable<ResourceLocation> info)
     {
         if(SaharaClient.getSahara().getModuleManager().cornholioModule.isActive())

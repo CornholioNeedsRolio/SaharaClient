@@ -8,9 +8,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+
+
 @Mixin(DebugRenderer.class)
 public class MixinDebugRenderer {
-    @Inject(method = "renderDebug", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "renderDebug", at = @At("RETURN"), cancellable = true, remap = !SaharaClient.isDebug)
     public void renderDebug(float partialTicks, long finishTimeNano, CallbackInfo info)
     {
         SaharaClient.getSahara().getModuleManager().wallhackModule.renderBoxes();

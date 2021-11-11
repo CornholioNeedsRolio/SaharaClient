@@ -23,7 +23,7 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer
         super(worldIn, playerProfile);
     }
 
-    @Inject(method = "isCurrentViewEntity", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isCurrentViewEntity", at = @At("RETURN"), cancellable = true, remap = !SaharaClient.isDebug)
     protected void isCurrentViewEntity(CallbackInfoReturnable<Boolean> info)
     {
         info.setReturnValue(info.getReturnValueZ() || SaharaClient.getSahara().getModuleManager().Freecam.isActive());
@@ -36,7 +36,7 @@ public class MixinEntityPlayerSP extends AbstractClientPlayer
     //        info.cancel();
     //}
 
-    @Inject(method = "startRiding", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "startRiding", at = @At("HEAD"), cancellable = true, remap = !SaharaClient.isDebug)
     public void startRiding(Entity entityIn, boolean force, CallbackInfoReturnable<Boolean> info)
     {
         if (!super.startRiding(entityIn, force))

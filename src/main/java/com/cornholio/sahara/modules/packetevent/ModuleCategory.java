@@ -4,7 +4,10 @@ public enum ModuleCategory
 {
     Player("Player"),
     Render("Render"),
-    Movement("Movement");
+    Movement("Movement"),
+    Combat("Combat"),
+    Farming("Farming"),
+    Visuals("Visuals");
 
 
     private final String name;

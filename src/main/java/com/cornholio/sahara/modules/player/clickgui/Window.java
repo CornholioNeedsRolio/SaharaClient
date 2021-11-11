@@ -1,4 +1,5 @@
 package com.cornholio.sahara.modules.player.clickgui;
+import com.cornholio.sahara.modules.visuals.ColorModule;
 import net.minecraft.client.gui.Gui;
 
 import java.awt.*;
@@ -24,6 +25,9 @@ public class Window
 
     protected int background_color = getIntFromColor(255, 255, 255, 255);
     protected int foreground_color = getIntFromColor(0, 0, 0, 255);
+
+    ColorModule attachedColorModuleBackground = null;
+    ColorModule attachedColorModuleForeground = null;
 
     protected List<Window> children = new ArrayList<>();
     Window parent = null;
@@ -93,7 +97,7 @@ public class Window
             if(stretchToParentX) width = parent.width - PaddingRight - PaddingLeft;
             if(stretchToParentY) height = parent.height - PaddingBottom - PaddingTop;
         }
-        Gui.drawRect(temp_x, temp_y, temp_x+width, temp_y+height, background_color);
+        Gui.drawRect(temp_x, temp_y, temp_x+width, temp_y+height, getBackground());
         for(Window child : children)
             child.renderWindow();
     }
@@ -155,6 +159,21 @@ public class Window
     {
         for(Window window : children)
             window.keyTyped(typedChar, keyCode);
+    }
+
+    public int getBackground()
+    {
+        if(attachedColorModuleBackground != null)
+            return attachedColorModuleBackground.getColor();
+
+        return background_color;
+    }
+
+    public int getForeground()
+    {
+        if(attachedColorModuleForeground != null)
+            return attachedColorModuleForeground.getColor();
+        return foreground_color;
     }
 
     public static int getIntFromColor(int red, int green, int blue, int alpha) {

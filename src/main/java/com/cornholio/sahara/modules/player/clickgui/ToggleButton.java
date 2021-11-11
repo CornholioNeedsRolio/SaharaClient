@@ -1,5 +1,6 @@
 package com.cornholio.sahara.modules.player.clickgui;
 
+import com.cornholio.sahara.SaharaClient;
 import com.cornholio.sahara.modules.ModuleSetting;
 
 public class ToggleButton extends Window implements IRefreshable
@@ -13,6 +14,7 @@ public class ToggleButton extends Window implements IRefreshable
 
         this.textBoxWindow = new TexBoxWindow(0,0,0,0);
         this.background_color = this.textBoxWindow.background_color = getIntFromColor(0,0,0,0);
+        textBoxWindow.attachedColorModuleForeground = SaharaClient.getSahara().getModuleManager().moduleOptionTextF;
         this.stretchToParentX = true;
         addChildren(textBoxWindow);
         setPadding(0,2,0,2);

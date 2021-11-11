@@ -28,17 +28,15 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-//I have no idea how the fuck gradle works, I just typed random shit for 3 days straight until I've got it right
+//I have no idea how the hell gradle works, I just typed random shit for 3 days straight until I've got it right
 
 version = '1.0'
 group = 'com.cornholio.sahara' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'sahara'
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+//archivesBaseName = 'sahara'
 
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
-    options.encoding = "UTF-8" // allow emoji in comments :^)
+    options.encoding = "UTF-8"
 }
 
 minecraft {
@@ -52,6 +50,7 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
             property 'fml.coreMods.load', 'com.cornholio.sahara.MixinLoader'
         }
     }
@@ -60,27 +59,14 @@ minecraft {
 repositories {
     maven {
         name = 'spongepowered'
-        url = 'https://repo.spongepowered.org/repository/maven-public/'
+        url = 'https://repo.spongepowered.org/maven'
     }
+    mavenCentral()
 }
 
 configurations {
     embed
     compile.extendsFrom(embed)
-}
-
-dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
-
-
-    embed('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
-        exclude module: 'guava'
-        exclude module: 'commons-io'
-        exclude module: 'gson'
-    }
-
-    annotationProcessor "org.spongepowered:mixin:0.8:processor"
-
 }
 
 sourceSets {
@@ -93,6 +79,22 @@ mixin {
     defaultObfuscationEnv 'searge'
     add sourceSets.main, 'mixins.sahara.refmap.json'
 }
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+
+    embed('org.spongepowered:mixin:0.8.3-SNAPSHOT') {
+        exclude module: 'guava'
+        exclude module: 'commons-io'
+        exclude module: 'gson'
+    }
+    //compile 'org.jetbrains:annotations:22.0.0'
+    annotationProcessor "org.spongepowered:mixin:0.8.3:processor"
+}
+
+//processor {
+//    options.reobfSrgFile = project.tasks.genSrgs.mcpToSrg.path
+//}
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {

@@ -8,11 +8,13 @@ public class PacketEvent extends Event
 {
     private Packet packet;
     private boolean canceled;
+    public EventType type;
 
-    public PacketEvent(Packet packet)
+    public PacketEvent(Packet packet, EventType type)
     {
         super();
         this.packet = packet;
+        this.type = type;
     }
 
     public Packet getPacket()

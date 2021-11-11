@@ -1,13 +1,20 @@
 package com.cornholio.sahara.modules;
 
 import com.cornholio.sahara.SaharaClient;
+import com.cornholio.sahara.modules.combat.CriticalsModule;
+import com.cornholio.sahara.modules.combat.KillAuraModule;
+import com.cornholio.sahara.modules.combat.OneShotBowModule;
+import com.cornholio.sahara.modules.farming.AutoShear;
 import com.cornholio.sahara.modules.movement.JesusModule;
+import com.cornholio.sahara.modules.movement.VelocityModule;
 import com.cornholio.sahara.modules.packetevent.PacketListener;
 import com.cornholio.sahara.modules.player.*;
 import com.cornholio.sahara.modules.player.autoreconnect.AutoReconnectModule;
 import com.cornholio.sahara.modules.player.clickgui.ClickGuiModule;
 import com.cornholio.sahara.modules.player.clickgui.WindowManager;
+import com.cornholio.sahara.modules.render.ViewClipModule;
 import com.cornholio.sahara.modules.render.WallhackModule;
+import com.cornholio.sahara.modules.visuals.ColorModule;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
@@ -39,6 +46,22 @@ public class ModuleManager
     public CornholioModule cornholioModule;
     public BoatPlaceConst boatPlaceConst;
     public MountBypassModule mountBypassModule;
+    public ViewClipModule viewClipModule;
+    public OneShotBowModule oneShotBowModule;
+    public AutoShear autoShear;
+    public AntiHungerModule antiHungerModule;
+    public VelocityModule velocityModule;
+    public PacketNukerModule packetNukerModule;
+    public KillAuraModule killAuraModule;
+    public CriticalsModule criticalsModule;
+    public AutoFishModule autoFishModule;
+
+    public ColorModule listTitleColorB;
+    public ColorModule listTitleColorF;
+    public ColorModule listColorB;
+    public ColorModule barColorB;
+    public ColorModule moduleTextF;
+    public ColorModule moduleOptionTextF;
 
     public ModuleManager()
     {
@@ -103,8 +126,16 @@ public class ModuleManager
     public List<Module> CreateAllModules()
     {
         List<Module> output = new ArrayList<Module>(Arrays.asList(
+                listTitleColorB = new ColorModule("Title Background", 255, 255, 255, 50),
+                listTitleColorF = new ColorModule("Title Foreground", 255, 255, 255, 255),
+                listColorB = new ColorModule("List Background", 125, 125, 125, 50),
+                barColorB = new ColorModule("Bar Background", 255, 255, 255, 255),
+                moduleTextF = new ColorModule("Module Text Foreground", 0, 0, 0, 255),
+                moduleOptionTextF = new ColorModule("Module Option Text Foreground", 0, 0, 0, 255),
+
                 Freecam = new FreecamModule(),
                 noRotation = new NoRotation(),
+                antiHungerModule = new AntiHungerModule(),
                 ClickGUI = new ClickGuiModule(),
                 boatFly = new BoatFly(),
                 autoMount = new AutoMount(),
@@ -115,7 +146,16 @@ public class ModuleManager
                 strangeModule = new StrangeModule(),
                 cornholioModule = new CornholioModule(),
                 boatPlaceConst = new BoatPlaceConst(),
-                mountBypassModule = new MountBypassModule()
+                mountBypassModule = new MountBypassModule(),
+                viewClipModule = new ViewClipModule(),
+                oneShotBowModule = new OneShotBowModule(),
+                autoShear = new AutoShear(),
+                velocityModule = new VelocityModule(),
+                packetNukerModule = new PacketNukerModule(),
+                killAuraModule = new KillAuraModule(),
+                criticalsModule = new CriticalsModule(),
+                autoFishModule = new AutoFishModule()
+
         ));
         return Collections.unmodifiableList(output);
     }

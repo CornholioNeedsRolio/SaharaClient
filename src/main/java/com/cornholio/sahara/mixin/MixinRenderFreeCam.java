@@ -23,7 +23,7 @@ public abstract class MixinRenderFreeCam extends RenderLivingBase<AbstractClient
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
     }
 
-    @Inject(method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At(value = "HEAD"))
+    @Inject(method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At(value = "HEAD"), remap = !SaharaClient.isDebug)
     public void doRender(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo ci)
     {
         if (SaharaClient.getSahara().getModuleManager().Freecam.isActive() && entity == Minecraft.getMinecraft().player)

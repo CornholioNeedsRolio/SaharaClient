@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockLiquid.class)
 public class MixinBlockLiquid
 {
-    @Inject(method = "canCollideCheck(Lnet/minecraft/block/state/IBlockState;Z)Z", at = @At(value="RETURN"), cancellable = true)
+    @Inject(method = "canCollideCheck(Lnet/minecraft/block/state/IBlockState;Z)Z", at = @At(value="RETURN"), cancellable = true, remap = !SaharaClient.isDebug)
     public void canCollideCheck(IBlockState state, boolean hitIfLiquid, CallbackInfoReturnable<Boolean> info)
     {
         info.setReturnValue(SaharaClient.getSahara().getModuleManager().jesusModule.canCollide(info.getReturnValue()));
     }
 
-    @Inject(method = "getCollisionBoundingBox", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getCollisionBoundingBox", at = @At("RETURN"), cancellable = true, remap = !SaharaClient.isDebug)
     public void getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos, final CallbackInfoReturnable<AxisAlignedBB> info)
     {
         info.setReturnValue(SaharaClient.getSahara().getModuleManager().jesusModule.getCollisionBoundingBox(info.getReturnValue()));

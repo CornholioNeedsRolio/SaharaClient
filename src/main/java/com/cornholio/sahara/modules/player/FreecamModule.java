@@ -5,6 +5,7 @@ import com.cornholio.sahara.modules.Module;
 import com.cornholio.sahara.modules.ModuleSetting;
 import com.cornholio.sahara.modules.packetevent.ModuleCategory;
 import com.cornholio.sahara.modules.packetevent.PacketEvent;
+import com.cornholio.sahara.utils.PlayerUtils;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -15,10 +16,13 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.network.play.client.*;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -28,30 +32,42 @@ public class FreecamModule extends Module
     private EntityOtherPlayerMP FakeCamera;
     ModuleSetting isCameraInteracting;
     ModuleSetting speed;
+    ModuleSetting look;
 
     public FreecamModule()
     {
         super("Freecam", "Makes your camera go rogue, stay seif boiii", ModuleCategory.Player);
         this.setKey(Keyboard.KEY_C);
-        isCameraInteracting = new ModuleSetting("Camera Interaction", false);
-        speed = new ModuleSetting("Speed", 0, 20, 1);
 
-        this.registerSetting(isCameraInteracting);
-        this.registerSetting(speed);
+        this.registerSetting(isCameraInteracting = new ModuleSetting("Camera Interaction", false));
+        this.registerSetting(speed = new ModuleSetting("Speed", 0, 20, 1));
+        this.registerSetting(look = new ModuleSetting("Look", false));
     }
 
     @Override
     public void onEnable()
     {
         super.onEnable();
-        SaharaClient.getSahara().sendMessage("ON");
+        //SaharaClient.getSahara().sendMessage("ON");
         resetKeys();
 
-        mc.renderChunksMany = false;
+        mc.renderChunksMany = true;
         FakeCamera = new FakeCamera(mc.world).Init(mc.player);
 
         mc.world.addEntityToWorld(-1769, FakeCamera);
         mc.setRenderViewEntity(FakeCamera);
+    }
+
+    @SubscribeEvent
+    public void onClientUpdate(TickEvent.ClientTickEvent event)
+    {
+        if(look.getBoolean() && mc.objectMouseOver != null && mc.player != null &&mc.objectMouseOver.getBlockPos() != null)
+        {
+            BlockPos pos = mc.objectMouseOver.getBlockPos();
+            float[] lookingAt = PlayerUtils.getLookAt(new Vec3d(pos.getX(),pos.getY(),pos.getZ()), new Vec3d(0.5, 0, 0.5));
+            mc.player.rotationYaw = lookingAt[0];
+            mc.player.rotationPitch = lookingAt[1];
+        }
     }
 
 
@@ -87,10 +103,10 @@ public class FreecamModule extends Module
     public void onDisable()
     {
         super.onDisable();
-        SaharaClient.getSahara().sendMessage("OFF");
+        //SaharaClient.getSahara().sendMessage("OFF");
         if(FakeCamera != null)
             mc.world.removeEntity(FakeCamera);
-        mc.renderChunksMany = true;
+        mc.renderChunksMany = false;
         mc.setRenderViewEntity(mc.player);
     }
 
@@ -162,9 +178,7 @@ public class FreecamModule extends Module
             inventory.copyInventory(mc.player.inventory);
 
         }
-
         public boolean isInvisible() {return true; }
         public boolean isSpectator() {return true; }
-
     }
 }

@@ -23,7 +23,7 @@ public class MixinGuiDisconnect extends GuiScreen
 
     AutoReconnectButton indianGuyThatIsAScretAgentAsAButtonInAMinecraftCheatOWO;
     Minecraft mc = Minecraft.getMinecraft();
-    @Inject(method = "initGui()V", at = @At(value="RETURN"))
+    @Inject(method = "initGui()V", at = @At(value="RETURN"), remap = !SaharaClient.isDebug)
     public void initGui(CallbackInfo ci)
     {
         buttonList.clear();
@@ -32,7 +32,7 @@ public class MixinGuiDisconnect extends GuiScreen
         this.buttonList.add(indianGuyThatIsAScretAgentAsAButtonInAMinecraftCheatOWO = new AutoReconnectButton(42069, this.width/2-100, Math.min(this.height / 2 + this.textHeight / 2 + this.fontRenderer.FONT_HEIGHT+50, this.height+20), "Reconnect"));
     }
 
-    @Inject(method = "actionPerformed", at = @At(value="HEAD"), cancellable = true)
+    @Inject(method = "actionPerformed", at = @At(value="HEAD"), cancellable = true, remap = !SaharaClient.isDebug)
     protected void actionPerformed(GuiButton button, CallbackInfo ci) throws IOException
     {
         SaharaClient sh = SaharaClient.getSahara();

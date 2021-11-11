@@ -2,6 +2,7 @@ package com.cornholio.sahara.modules.player.clickgui;
 
 import com.cornholio.sahara.SaharaClient;
 import com.cornholio.sahara.modules.Module;
+import com.cornholio.sahara.modules.ModuleManager;
 import com.cornholio.sahara.modules.packetevent.ModuleCategory;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 public class CategoryFrame extends Window {
     TexBoxWindow textBox;
     Window whiteBar;
+    Window parentOfTextbox;
     VerticalList moduleList;
 
     private boolean isDragging = false;
@@ -19,16 +21,24 @@ public class CategoryFrame extends Window {
         super(x, y, 0, 0);
         refreshable = true;
         //TITLE
-        addChildren(textBox = new TexBoxWindow(0, 0, 0, 0).setText(category.getName()));
-        textBox.foreground_color = getIntFromColor(255, 255, 255, 255);
-        textBox.setPadding(2, 2, 2, 2);
-        textBox.background_color = getIntFromColor(255, 255, 255, 50);
+        addChildren(parentOfTextbox = new Window(0, 0, 0, 0));
+        parentOfTextbox.background_color = getIntFromColor(0,0,0,0);
+        parentOfTextbox.attachedColorModuleBackground = SaharaClient.getSahara().getModuleManager().listTitleColorB;
+        parentOfTextbox.setPadding(2, 2, 2, 0);
+        parentOfTextbox.stretchToParentX = true;
+
+        parentOfTextbox.addChildren(textBox = new TexBoxWindow(0, 0, 0, 0).setText(category.getName()));
+        textBox.attachedColorModuleForeground = SaharaClient.getSahara().getModuleManager().listTitleColorF;//getIntFromColor(255, 255, 255, 255);
+        textBox.setPadding(2, 2, 2, 0);
+        textBox.background_color = getIntFromColor(0, 0, 0, 0);
         textBox.stretchToParentX = true;
-        background_color = getIntFromColor(125, 125, 125, 50);
+        parentOfTextbox.refreshWindowSizeToMatchChildren();
+        //background_color = getIntFromColor(125, 125, 125, 50);
+        attachedColorModuleBackground = SaharaClient.getSahara().getModuleManager().listColorB;
         //NICE WHITE BAR UwU
-        addChildren(whiteBar = new Window(0, textBox.getBottom(true), 0, 2));
+        addChildren(whiteBar = new Window(0, parentOfTextbox.getBottom(true), 0, 2));
         whiteBar.setPadding(2, 0, 2, 2);
-        whiteBar.background_color = getIntFromColor(255, 255, 255, 255);
+        whiteBar.attachedColorModuleBackground = SaharaClient.getSahara().getModuleManager().barColorB;//getIntFromColor(255, 255, 255, 255);
         whiteBar.stretchToParentX = true;
         //Module list
         moduleList = new VerticalList(textBox.getLeft(false), whiteBar.getBottom(true), 0, 0);

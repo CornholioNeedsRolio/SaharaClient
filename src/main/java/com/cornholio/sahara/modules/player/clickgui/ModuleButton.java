@@ -1,5 +1,6 @@
 package com.cornholio.sahara.modules.player.clickgui;
 
+import com.cornholio.sahara.SaharaClient;
 import com.cornholio.sahara.modules.Module;
 import com.cornholio.sahara.modules.ModuleSetting;
 
@@ -48,6 +49,7 @@ public class ModuleButton extends Window
         text = new TexBoxWindow(0,0,0,0);
         text.setPadding(2,2,2,2);
         moduleOrderer.background_color = text.background_color =  settingList.background_color = background_color = getIntFromColor(0,0,0,0);
+        text.attachedColorModuleForeground = SaharaClient.getSahara().getModuleManager().moduleTextF;
         text.setText(this.module.getName());
 
         textBackground = new Window(0,0,0,0);

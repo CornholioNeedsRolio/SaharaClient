@@ -1,5 +1,6 @@
 package com.cornholio.sahara.modules.player.clickgui;
 
+import com.cornholio.sahara.SaharaClient;
 import com.cornholio.sahara.modules.ModuleSetting;
 import com.cornholio.sahara.modules.player.clickgui.TexBoxWindow;
 import com.cornholio.sahara.modules.player.clickgui.Window;
@@ -20,8 +21,9 @@ public class SliderWindow extends Window implements IRefreshable
         textBoxWindow = new TexBoxWindow(0,0,0,0);
         textBoxWindow.background_color = getIntFromColor(0,0,0,0);
         textBoxWindow.stretchToParentX = true;
+        textBoxWindow.attachedColorModuleForeground = SaharaClient.getSahara().getModuleManager().moduleOptionTextF;
         stretchToParentX = true;
-        slider.background_color = getIntFromColor(255,0,0,150);
+        slider.background_color = setting.getSliderColor();//getIntFromColor(255,0,0,150);
         setPadding(0,2,0,2);
         addChildren(textBoxWindow);
         this.width = width;
@@ -69,9 +71,13 @@ public class SliderWindow extends Window implements IRefreshable
             int mouseDiff = temp_x - mouseX;
             if(mouseDiff > 0)
                 setting.setFloat(setting.getMin());
-            else
-                setting.setFloat((Math.abs(mouseDiff) / (float)width) * (setting.getMax() - setting.getMin()) + setting.getMin());
-
+            else {
+                setting.setFloat((Math.abs(mouseDiff) / (float) width) * (setting.getMax() - setting.getMin()) + setting.getMin());
+                if(setting.getClampMax())
+                {
+                    setting.setFloat(Math.min(setting.getFloat(), setting.getMax()));
+                }
+            }
             updateText(true);
         }
     }

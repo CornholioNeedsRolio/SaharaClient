@@ -14,8 +14,9 @@
     "MixinModelPlayer",
     "MixinNetworkManager",
     "MixinRenderFreeCam",
-    "MixinTurnOverride",
+    "MixinEntity",
     "MixinAbstractClientPlayer",
-    "MixinDebugRenderer"
+    "MixinDebugRenderer",
+    "MixinRenderLivingBase"
   ]
 }

@@ -32,7 +32,7 @@ public class TexBoxWindow extends Window
         //    int max = parent.width / font.getCharWidth(' ');
         //}
 
-        font.drawString(text, x, y, foreground_color);
+        font.drawString(text, x, y, getForeground());
 
     }
 }

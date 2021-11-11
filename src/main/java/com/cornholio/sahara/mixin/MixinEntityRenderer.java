@@ -4,6 +4,7 @@ import com.cornholio.sahara.SaharaClient;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,7 +20,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,7 +39,7 @@ public abstract class MixinEntityRenderer
     //    SaharaClient.getSahara().getModuleManager().wallhackModule.renderBoxes();
     //}
 
-    @Inject(method = "getMouseOver(F)V", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "getMouseOver(F)V", at = @At(value = "HEAD"), cancellable = true, remap = !SaharaClient.isDebug)
     public void getMouseOver(float partialTicks, CallbackInfo ci)
     {
         Entity entity = SaharaClient.getSahara().getModuleManager().Freecam.getRenderViewEntity();
@@ -142,6 +145,14 @@ public abstract class MixinEntityRenderer
         ci.cancel();
     }
 
+    @Redirect(method = "orientCamera", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/WorldClient;rayTraceBlocks(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/RayTraceResult;"), expect = 0, remap = !SaharaClient.isDebug)
+    private RayTraceResult rayTraceBlocks(WorldClient worldClient, Vec3d start, Vec3d end)
+    {
+        if (SaharaClient.getSahara().getModuleManager().viewClipModule.isActive())
+            return null;
+        else
+            return worldClient.rayTraceBlocks(start, end);
+    }
     //@Inject(method = "updateCameraAndRender", at = @At(value = "HEAD"), cancellable = true)
     //public void updateCameraAndRender(float partialTicks, long nanoTime, CallbackInfo info)
     //{
